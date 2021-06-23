@@ -11,6 +11,8 @@ object HotcellAnalysis {
   Logger.getLogger("akka").setLevel(Level.WARN)
   Logger.getLogger("com").setLevel(Level.WARN)
 
+def 
+
 def runHotcellAnalysis(spark: SparkSession, pointPath: String): DataFrame =
 {
   // Load the original data from a data source

@@ -47,5 +47,24 @@ object HotcellUtils {
     return calendar.get(Calendar.DAY_OF_MONTH)
   }
 
+  def getCellBoundary(initialVal, minVal, maxVal) = if (initialVal == minVal || initialVal == maxVal) 1 else 0
+
+  type CoordinateTuple = (Int, Int, Int)
+
   // YOU NEED TO CHANGE THIS PART
+  def getAdjacentHotCells(inputVals: CoordinateTuple, minVals: CoordinateTuple, maxVals: CoordinateTuple): Int = {
+    val (x, y, z) = inputVals
+    val (minX, minY, minZ) = minVals
+    val (maxX, maxY, maxZ) = maxVals
+    
+    // check boundaries
+    getCellBoundary(x, minX, maxX) + getCellBoundary(y, minY, maxY) + getCellBoundary(x, minX, maxX) match {
+      case 1 => 18
+      case 2 => 12
+      case 3 => 8
+      case _ => 27
+    }
+  }
+
+  def computeGetisOrdStat(): Double = ???
 }
