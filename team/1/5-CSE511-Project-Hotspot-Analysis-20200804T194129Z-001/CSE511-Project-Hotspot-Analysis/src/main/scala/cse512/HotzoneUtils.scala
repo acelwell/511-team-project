@@ -3,28 +3,20 @@ package cse512
 object HotzoneUtils {
 
   def ST_Contains(queryRectangle: String, pointString: String ): Boolean = {
-    val queryRectangleSplit = queryRectangle.split(",")
-    val pointStringSplit = pointString.split(",")
+  
+  val rectangle_point = queryRectangle.split(",")
+  val target_point = pointString.split(",")
 
-    val lat1 = queryRectangleSplit(0).toFloat
-    val long1 = queryRectangleSplit(1).toFloat
-    val lat2 = queryRectangleSplit(2).toFloat
-    val long2 = queryRectangleSplit(3).toFloat
+  val xTargetLong: Double = target_point(0).trim.toDouble
+  val yTargetLat: Double = target_point(1).trim.toDouble
+  val minLongX: Double = math.min(rectangle_point(0).trim.toDouble, rectangle_point(2).trim.toDouble)
+  val maxLongX: Double = math.max(rectangle_point(0).trim.toDouble, rectangle_point(2).trim.toDouble)
+  val minLatY: Double = math.min(rectangle_point(1).trim.toDouble, rectangle_point(3).trim.toDouble)
+  val maxLatY: Double = math.max(rectangle_point(1).trim.toDouble, rectangle_point(3).trim.toDouble)
 
-    val plat1 = pointStringSplit(0).toFloat
-    val plong1 = pointStringSplit(1).toFloat
-
-    if(((lat1 <= plat1 && plat1 <= lat2) || (lat2 <= plat1 && plat1 <= lat1)) &&
-      ((long1 <= plong1 && plong1 <= long2) || (long2 <= plong1 && plong1 <= long1)))
-    {
-      return true
-    }
-    else
-    {
-      return false
-    }
+  if ((xTargetLong >= minLongX) && (xTargetLong <= maxLongX) && (yTargetLat >= minLatY) && (yTargetLat <= maxLatY)) {
+    return true
   }
-
-  // YOU NEED TO CHANGE THIS PART
-
+  return false
+  }
 }
