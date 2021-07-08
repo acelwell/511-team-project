@@ -80,23 +80,23 @@ object HotcellAnalysis {
 
     val adjacentCellsSql =
       s"""
-         |SELECT hcc2.x as x, hcc2.y as y, hcc2.z as z, SUM(hcc1.cell_count) as spatialWeightSumAndCellValue, computeSpatialWeightSum(hcc2.x,hcc2.y,hcc2.z,$minX,$minY,$minZ,$maxX,$maxY,$maxZ) as spatialWeightSum
-         |FROM hotCellCountView as hcc1, hotCellCountView as hcc2
-         |WHERE (hcc1.x = hcc2.x+1 OR hcc1.x = hcc2.x OR hcc1.x = hcc2.x-1)
-         |AND (hcc1.y = hcc2.y+1 OR hcc1.y = hcc2.y OR hcc1.y = hcc2.y-1)
-         |AND (hcc1.z = hcc2.z+1 OR hcc1.z = hcc2.z OR hcc1.z = hcc2.z-1)
-         |GROUP BY hcc2.z, hcc2.y, hcc2.x
-         |ORDER BY hcc2.z, hcc2.y, hcc2.x
-         |""".stripMargin
+        |SELECT hcc2.x as x, hcc2.y as y, hcc2.z as z, SUM(hcc1.cell_count) as spatialWeightSumAndCellValue, computeSpatialWeightSum(hcc2.x,hcc2.y,hcc2.z,$minX,$minY,$minZ,$maxX,$maxY,$maxZ) as spatialWeightSum
+        |FROM hotCellCountView as hcc1, hotCellCountView as hcc2
+        |WHERE (hcc1.x = hcc2.x+1 OR hcc1.x = hcc2.x OR hcc1.x = hcc2.x-1)
+        |AND (hcc1.y = hcc2.y+1 OR hcc1.y = hcc2.y OR hcc1.y = hcc2.y-1)
+        |AND (hcc1.z = hcc2.z+1 OR hcc1.z = hcc2.z OR hcc1.z = hcc2.z-1)
+        |GROUP BY hcc2.z, hcc2.y, hcc2.x
+        |ORDER BY hcc2.z, hcc2.y, hcc2.x
+        |""".stripMargin
     val adjacentCellsDf = spark.sql(adjacentCellsSql)
     adjacentCellsDf.createOrReplaceTempView("adjacentCellsView")
 
     val getisOrdStatSql =
       s"""
-         |SELECT x, y, z, computeGetisOrdStat(spatialWeightSumAndCellValue,$averageCellValue,spatialWeightSum,$standardDeviation,$numCells) as getisOrdStat
-         |FROM adjacentCellsView
-         |ORDER BY getisOrdStat DESC
-         |""".stripMargin
+        |SELECT x, y, z, computeGetisOrdStat(spatialWeightSumAndCellValue,$averageCellValue,spatialWeightSum,$standardDeviation,$numCells) as getisOrdStat
+        |FROM adjacentCellsView
+        |ORDER BY getisOrdStat DESC, x DESC, y ASC, z DESC
+        |""".stripMargin
     val getisOrdStatDf = spark.sql(getisOrdStatSql)
     getisOrdStatDf.createOrReplaceTempView("getisOrdStatView")
 
